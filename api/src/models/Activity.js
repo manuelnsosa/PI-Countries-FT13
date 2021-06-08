@@ -4,34 +4,21 @@ const { DataTypes } = require("sequelize");
 module.exports = (sequelize) => {
   // defino el modelo
   sequelize.define(
-    "country",
+    "activity",
     {
-      alpha3Code: {
-        type: DataTypes.STRING(3),
-        allowNull: false,
-      },
       name: {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      image: {
+      difficulty: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+      },
+      duration: {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      region: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      subregion: {
-        type: DataTypes.STRING,
-      },
-      area: {
-        type: DataTypes.INTEGER,
-      },
-      population: {
-        type: DataTypes.INTEGER,
-      },
-      capital: {
+      season: {
         type: DataTypes.STRING,
         allowNull: false,
       },
