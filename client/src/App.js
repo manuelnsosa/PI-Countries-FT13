@@ -1,13 +1,19 @@
-import "./App.css";
-import { axios } from "axios";
+import React from "react";
+import { Route, BrowserRouter as Router } from "react-router-dom";
+import Landing from "./components/Landing.jsx";
+import Home from "./components/Home";
+/* ;
+import store from "../store/index.js"; */
 
 function App() {
-  /* const dbCountries = axios.get('http://localhost:3001/countries?page=1&order=ASC&category=name')
-  dbCountries.for */
   return (
-    <div className="App">
-      <h1>Henry Countries</h1>
-    </div>
+    <Router>
+      <React.Fragment>
+        <Route exact path="/" component={Landing} />
+        <Route exact path="/home" component={Home} />
+        <Route exact path="/activities" />
+      </React.Fragment>
+    </Router>
   );
 }
 

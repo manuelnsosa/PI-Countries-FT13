@@ -34,29 +34,34 @@ router.get("/countries/:code", async (req, res, next) => {
 router.get("/countries", async (req, res) => {
   var arr = [];
   const name = req.query.name;
-  if (arr.length === 0) {
-    arr = await axios.get("https://restcountries.eu/rest/v2/all");
-  }
-  const apiCountries = arr.data;
+  try {
+    if (arr.length === 0) {
+      arr = await axios.get("https://restcountries.eu/rest/v2/all");
+    }
+    const apiCountries = arr.data;
 
-  apiCountries.forEach(async (e) => {
-    const obj = {
-      alpha3Code: e.alpha3Code,
-      name: e.name,
-      image: e.flag,
-      region: e.region,
-      subregion: e.subregion,
-      area: e.area,
-      population: e.population,
-      capital: e.capital,
-    };
-    await Country.findOrCreate({
-      where: obj,
-    }).catch((err) => {
-      console.log(err);
+    apiCountries.forEach(async (e) => {
+      if (e) {
+        const obj = {
+          alpha3Code: e.alpha3Code,
+          name: e.name,
+          image: e.flag,
+          region: e.region,
+          subregion: e.subregion,
+          area: e.area,
+          population: e.population,
+          capital: e.capital,
+        };
+        await Country.findOrCreate({
+          where: obj,
+        }).catch((err) => {
+          console.log(err);
+        });
+      }
     });
-  });
-
+  } catch (err) {
+    console.log(err);
+  }
   if (name) {
     try {
       let foundCountry = await Country.findAll({
