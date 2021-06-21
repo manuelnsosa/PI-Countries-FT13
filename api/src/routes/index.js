@@ -32,40 +32,54 @@ router.get("/countries/:code", async (req, res, next) => {
 });
 
 router.get("/countries", async (req, res) => {
-  var arr = [];
   const name = req.query.name;
   try {
-    if (arr.length === 0) {
-      arr = await axios.get("https://restcountries.eu/rest/v2/all");
-    }
-    const apiCountries = arr.data;
+    if (req.query.name === "first") {
+      var arr = [];
+      if (arr.length === 0) {
+        arr = await axios
+          .get("https://restcountries.eu/rest/v2/all")
+          .catch((err) => {
+            console.log(err);
+          });
+      }
+      if (arr !== []) {
+        const apiCountries = await arr.data;
 
-    apiCountries.forEach(async (e) => {
-      if (e) {
-        const obj = {
-          alpha3Code: e.alpha3Code,
-          name: e.name,
-          image: e.flag,
-          region: e.region,
-          subregion: e.subregion,
-          area: e.area,
-          population: e.population,
-          capital: e.capital,
-        };
-        await Country.findOrCreate({
-          where: obj,
-        }).catch((err) => {
-          console.log(err);
+        apiCountries.forEach(async (e) => {
+          // && name === "" && req.query.category === "area"
+          if (e) {
+            let obj = {
+              alpha3Code: e.alpha3Code,
+              name: e.name,
+              image: e.flag,
+              region: e.region,
+              subregion: e.subregion,
+              area: e.area,
+              population: e.population,
+              capital: e.capital,
+            };
+            {
+              Object.keys(obj).length &&
+                (await Country.findOrCreate({
+                  where: obj,
+                }).catch((err) => {
+                  console.log(err);
+                }));
+            }
+          }
         });
       }
-    });
+      console.log("done");
+    }
   } catch (err) {
     console.log(err);
   }
-  if (name) {
+  if (name !== "first") {
     try {
       let foundCountry = await Country.findAll({
         //  Country.get ?? .get is not a function
+        order: [[req.query.category, req.query.order]],
         where: {
           name: {
             [Op.iLike]: "%" + name + "%",
@@ -95,6 +109,7 @@ router.get("/countries", async (req, res) => {
 
 router.post("/activity", async (req, res, next) => {
   let data = req.body;
+  console.log(data);
   let countries = data.countries;
   let countriesArray = countries.split(",").map(function (value) {
     return value.trim();
@@ -136,8 +151,8 @@ router.post("/activity", async (req, res, next) => {
             //consologueo cuando se hace la conexión entre tablas
             console.log("connection done");
           })
-          .catch((err) => {
-            console.log(err);
+          .catch(() => {
+            console.log("error");
           });
       });
     });

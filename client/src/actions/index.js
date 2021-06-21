@@ -33,8 +33,8 @@ export function getCountryDetail(code) {
 
 export function addActivity(data) {
   return function (dispatch) {
-    return axios.post("http://localhost:3001/activity", {}).then((json) => {
-      dispatch({ type: POST_ACTIVITY, payload: json });
+    return axios.post("http://localhost:3001/activity", data).then((json) => {
+      dispatch({ type: POST_ACTIVITY, payload: json.data });
     });
   };
 }
