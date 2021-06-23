@@ -2,7 +2,6 @@ import React from "react";
 import { CardStyle } from "./Card.js";
 
 export function Card({ country }) {
-  console.log(country);
   return (
     <CardStyle key={country.name}>
       <div className="containerimg">

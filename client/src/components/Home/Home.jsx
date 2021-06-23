@@ -15,7 +15,6 @@ export function Home() {
   let filteredbyActivity = [];
   let filteredbyContinent = [];
   let countriesToRender = matched.length >= 1 ? matched : countries;
-
   var idexLastPost = page * postsInPage;
   var indexFirstPost = idexLastPost - postsInPage;
   var currentPosts = countriesToRender.slice(indexFirstPost, idexLastPost);
@@ -36,7 +35,6 @@ export function Home() {
       filteredbyContinent = [];
       let arr = countries.filter((e) => e.region === algo.target.value);
       filteredbyContinent = arr;
-      console.log(filteredbyContinent);
     }
     if (name === "activity") {
       filteredbyActivity = [];
@@ -111,9 +109,9 @@ export function Home() {
     if (!matched) {
       return;
     }
-    if (countriesToRender === countries && matched) {
+    /*     if (countriesToRender === countries && matched) {
       countriesToRender = matched;
-    }
+    } */
   }, [matched, currentPosts, countriesToRender]);
 
   return (

@@ -26,6 +26,7 @@ export function getAllCountries(e = [], name = "") {
 export function getCountryDetail(code) {
   return function (dispatch) {
     return axios.get(`http://localhost:3001/countries/${code}`).then((json) => {
+      console.log(json);
       dispatch({ type: GET_BY_CODE, payload: json.data });
     });
   };

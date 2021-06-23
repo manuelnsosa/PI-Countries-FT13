@@ -37,7 +37,6 @@ router.get("/countries", async (req, res, next) => {
   try {
     if (req.query.name === "first" && firstTime) {
       firstTime = false;
-      //firstTime = false;
       var arr = [];
       if (arr.length === 0) {
         arr = await axios
@@ -48,7 +47,6 @@ router.get("/countries", async (req, res, next) => {
         const apiCountries = await arr.data;
 
         apiCountries.forEach(async (e) => {
-          // && name === "" && req.query.category === "area"
           if (e) {
             let obj = {
               alpha3Code: e.alpha3Code,

@@ -17,60 +17,81 @@ export function Form() {
     season: "",
     countries: "",
   });
+  const [errors, setErrors] = useState({
+    name: "",
+    difficulty: 0,
+    duration: "",
+    season: "You must choose a season",
+  });
+  let error = "";
   const handleOnChange = (e) => {
-    /* const { name, value } = e.target;
-    let errors = this.state.errors;
-    console.log(errors);
+    const { name, value } = e.target;
+    console.log(name);
     switch (name) {
       case "name":
-        errors.name =
+        error =
           typeof value === "string" && value.length < 4
             ? "Name must have at least 4 characters"
             : "";
+        setErrors({
+          ...errors,
+          [name]: error,
+        });
         break;
       case "difficulty":
-        errors.difficulty =
-          typeof value === "number" && value >= 0 && value <= 5
-            ? "Difficulty must be an integer between 0 and 5"
-            : "";
+        error =
+          value >= 0 && value <= 5
+            ? ""
+            : "Difficulty must be an integer between 0 and 5";
+        setErrors({
+          ...errors,
+          [name]: error,
+        });
         break;
       case "duration":
-        errors.duration =
-          typeof value === "string" && value.length < 4
-            ? "Duration must have at least 4 characters"
-            : "";
+        error =
+          typeof value === "string" && value.length >= 4
+            ? ""
+            : "Duration must have at least 4 characters";
+        setErrors({
+          ...errors,
+          [name]: error,
+        });
         break;
       case "season":
-        errors.season = value === "" ? "You must choose a season" : "";
+        error = value === "" ? "You must choose a season" : "";
+        setErrors({
+          ...errors,
+          [name]: error,
+        });
         break;
       default:
         break;
-    } */
-    console.log(e);
+    }
+
     if (e.target.type === "checkbox") {
       if (data.countries.includes(e.name)) {
       } else {
         setData({
           ...data,
-          countries: data.countries + e.target.name + " , ",
+          countries: data.countries + name + " , ",
         });
       }
     } else {
       setData({
         ...data,
-        [e.target.name]: e.target.value,
+        [name]: value,
       });
     }
-    console.log(data);
   };
   const handleOnSubmit = (e) => {
     let countriesToAdd = data.countries.slice(0, data.countries.length - 1);
-    console.log(countriesToAdd);
+
     setData({
       ...data,
       countries: countriesToAdd,
     });
-    console.log(data);
+
     dispatch(addActivity(data));
     let uncheck = document.querySelectorAll(".selector");
     uncheck.forEach((e) => (e.checked = false));
@@ -91,6 +112,7 @@ export function Form() {
             placeholder={"What's the activity's name?"}
             required
           />
+          {!errors.name ? null : <div>{errors.name}</div>}
         </div>
 
         <div className="formdivs">
@@ -103,6 +125,7 @@ export function Form() {
             placeholder={"Complete the difficulty (0-5)"}
             required
           />
+          {!errors.difficulty ? null : <div>{errors.difficulty}</div>}
         </div>
         <div className="formdivs">
           <button className="ha">Duration: </button>
@@ -114,10 +137,9 @@ export function Form() {
             placeholder={"Complete the duration"}
             required
           />
+          {!errors.duration ? null : <div>{errors.duration}</div>}
         </div>
         <div className="formdivs">
-          {/* <button className="ha">Season: </button>
-          <a></a> */}
           <select
             name="season"
             className="selectseason"
@@ -129,13 +151,7 @@ export function Form() {
             <option value="Fall">Fall</option>
             <option value="Winter">Winter</option>
           </select>
-          {/* <input
-            className="input"
-            name="season"
-            onChange={handleOnChange}
-            autoComplete="off"
-            placeholder={"season"}
-          /> */}
+          {!errors.season ? null : <div>{errors.season}</div>}
         </div>
       </form>
 
@@ -158,11 +174,17 @@ export function Form() {
           })}
       </div>
       <div className="divbtn">
-        <Link to="/home" className="link">
-          <button className="btnaddact" onClick={handleOnSubmit}>
-            ADD ACTIVITY
-          </button>
-        </Link>
+        {!errors.name &&
+        !errors.difficulty &&
+        !errors.duration &&
+        !errors.season &&
+        data.countries ? (
+          <Link to="/home" className="link">
+            <button className="btnaddact" onClick={handleOnSubmit}>
+              ADD ACTIVITY
+            </button>
+          </Link>
+        ) : null}
       </div>
       <ScrollButton />
     </FormStyle>

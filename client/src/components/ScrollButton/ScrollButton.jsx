@@ -13,8 +13,8 @@ export function ScrollButton() {
     } else {
       //document.documentElement.ScrollButton = 0;
       let x = 0;
-      let y = 150;
-      window.scrollTo((x = 0), (y = 2000));
+      let y = 2000;
+      window.scrollTo(x, y);
     }
   };
   return (
@@ -27,12 +27,14 @@ export function ScrollButton() {
         type="submit"
       >
         <img
+          alt="Couldn't load"
           className="btn2"
           src="https://img.icons8.com/android/48/000000/circled-left-2.png"
         />
       </Link>
 
       <img
+        alt="Couldn't load"
         className="btn1"
         src="https://img.icons8.com/android/48/000000/circled-up-2.png"
         onClick={() => {
@@ -43,6 +45,7 @@ export function ScrollButton() {
       />
 
       <img
+        alt="Couldn't load"
         className="btn3"
         src="https://img.icons8.com/android/48/000000/circled-down-2.png"
         onClick={() => {

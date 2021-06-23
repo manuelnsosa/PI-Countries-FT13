@@ -9,9 +9,8 @@ export function Landing() {
   const dispatch = useDispatch();
 
   const countries = useSelector((store) => store.countries);
-  const loaded = useSelector((store) => store.loaded);
   const callBackEnd = () =>
-    dispatch(getAllCountries(["DESC", "area"], "first"));
+    dispatch(getAllCountries(["DESC", "capital"], "first"));
   if (countries.length < 10) {
     callBackEnd();
     console.log("done");

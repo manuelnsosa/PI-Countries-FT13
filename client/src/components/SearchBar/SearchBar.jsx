@@ -21,10 +21,14 @@ const SearchBar = () => {
     dispatch(getAllCountries(["ASC", "name"], input));
   };
 
-  const handleOnSubmit = (e) => {
+  const handleOnSubmit = (e, order = "") => {
     console.log(input);
     e.preventDefault();
-    dispatch(getAllCountries(["ASC", "name"], input));
+    if (order === "refresh") {
+      dispatch(getAllCountries(["DESC", "capital"], input));
+    } else {
+      dispatch(getAllCountries(["ASC", "name"], input));
+    }
     document.querySelector("input").value = "";
     setInput("");
   };
@@ -46,7 +50,11 @@ const SearchBar = () => {
           <Link to="/activities" className="link">
             <button className="forms_button2">CREATE NEW ACTIVITY</button>
           </Link>
-          <Link to="/home" onClick={handleOnSubmit} className="link">
+          <Link
+            to="/home"
+            onClick={(e) => handleOnSubmit(e, "refresh")}
+            className="link"
+          >
             <button className="forms_button2">REFRESH</button>
           </Link>
         </form>

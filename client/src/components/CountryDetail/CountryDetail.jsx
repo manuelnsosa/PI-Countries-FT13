@@ -10,7 +10,7 @@ export function CountryDetail() {
   const dispatch = useDispatch();
   const country = useSelector((store) => store.country);
   const countries = useSelector((store) => store.countries);
-  let activities = [];
+  console.log(countries[0]);
   console.log(country);
   useEffect(() => {
     if (country) {
@@ -22,7 +22,7 @@ export function CountryDetail() {
     <StyledCountryDetail>
       <div className="card">
         <h1 className="txtName">{country.name}</h1>
-        <img className="img" src={country.image} alt="Image not found" />
+        <img className="img" src={country.image} alt="Couldn't load" />
         <h2 className="txt">Code: {country.alpha3Code}</h2>
         <h2 className="txt">Capital: {country.capital}</h2>
         <h2 className="txt">Region: {country.region}</h2>
