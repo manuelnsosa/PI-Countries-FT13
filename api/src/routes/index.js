@@ -6,6 +6,7 @@ const { Op } = require("sequelize");
 // Ejemplo: const authRouter = require('./auth.js');
 
 const router = Router();
+let firstTime = true;
 
 // Configurar los routers
 // Ejemplo: router.use('/auth', authRouter);
@@ -31,17 +32,17 @@ router.get("/countries/:code", async (req, res, next) => {
   }
 });
 
-router.get("/countries", async (req, res) => {
+router.get("/countries", async (req, res, next) => {
   const name = req.query.name;
   try {
-    if (req.query.name === "first") {
+    if (req.query.name === "first" && firstTime) {
+      firstTime = false;
+      //firstTime = false;
       var arr = [];
       if (arr.length === 0) {
         arr = await axios
           .get("https://restcountries.eu/rest/v2/all")
-          .catch((err) => {
-            console.log(err);
-          });
+          .catch((error) => next(error));
       }
       if (arr !== []) {
         const apiCountries = await arr.data;
@@ -63,9 +64,7 @@ router.get("/countries", async (req, res) => {
               Object.keys(obj).length &&
                 (await Country.findOrCreate({
                   where: obj,
-                }).catch((err) => {
-                  console.log(err);
-                }));
+                }).catch((error) => next(error)));
             }
           }
         });
@@ -109,7 +108,6 @@ router.get("/countries", async (req, res) => {
 
 router.post("/activity", async (req, res, next) => {
   let data = req.body;
-  console.log(data);
   let countries = data.countries;
   let countriesArray = countries.split(",").map(function (value) {
     return value.trim();
@@ -137,24 +135,26 @@ router.post("/activity", async (req, res, next) => {
   //una vez encontrada, voy a recorrer el array creado con países
   //voy a buscar a cada uno en la db
   foundActivity.then((activity) => {
-    countriesArray.forEach((e) => {
-      const foundCountry = Country.findOne({
-        where: {
-          name: e,
-        },
-      });
+    countriesArray.forEach((e, index) => {
+      if (index < countriesArray.length - 1) {
+        const foundCountry = Country.findOne({
+          where: {
+            name: e,
+          },
+        });
+        foundCountry.then((country) => {
+          activity
+            .addCountry([country])
+            .then(() => {
+              //consologueo cuando se hace la conexión entre tablas
+              console.log("connection done");
+            })
+            .catch(() => {
+              console.log("error");
+            });
+        });
+      }
       // luego a la actividad le agrego el country de cada posicion del array
-      foundCountry.then((country) => {
-        activity
-          .addCountry([country])
-          .then(() => {
-            //consologueo cuando se hace la conexión entre tablas
-            console.log("connection done");
-          })
-          .catch(() => {
-            console.log("error");
-          });
-      });
     });
   });
   //devuelvo la nueva actividad creada

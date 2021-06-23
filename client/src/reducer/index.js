@@ -4,6 +4,7 @@ const initialState = {
   countries: [],
   country: {},
   activities: [],
+  loaded: true,
 };
 
 export function rootReducer(state = initialState, action) {
